@@ -100,7 +100,7 @@ func UpdatePostfixTokens(infixTokens []string) []string {
 				if operatorStack.Size() == 0 {
 					break
 				}
-				if getOperatorPrecedence(operatorStack.Peek(), token) == Lower {
+				if getOperatorPrecedence(operatorStack.Peek(), token) == Higher {
 					break
 				}
 				if getOperatorPrecedence(operatorStack.Peek(), token) == SameRightAssoc {
@@ -151,9 +151,9 @@ func getOperatorPrecedence(op string, refOp string) int {
 	opScore := getScore(op)
 	refOpScore := getScore(refOp)
 	switch {
-	case opScore < refOpScore:
-		return Higher
 	case opScore > refOpScore:
+		return Higher
+	case opScore < refOpScore:
 		return Lower
 	case opScore == 1:
 		return SameRightAssoc
