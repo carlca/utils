@@ -1,4 +1,3 @@
-
 package matheval
 
 import (
