@@ -1,4 +1,4 @@
-package matheval
+package MathEval
 
 import (
 	"fmt"
@@ -16,4 +16,7 @@ func TestTokens(t *testing.T) {
 	}
 	postfixTokens := UpdatePostfixTokens(infixTokens)
 	fmt.Println(postfixTokens)
+	calculatedValue := UpdatePostfixValue(postfixTokens)
+	fmt.Print("Calculated Value: ")
+	fmt.Println(calculatedValue)
 }

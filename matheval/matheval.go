@@ -1,4 +1,4 @@
-package matheval
+package MathEval
 
 import (
 	"bytes"
@@ -58,14 +58,13 @@ func UpdatePostfixTokens(infixTokens []string) []string {
 	var postfixStack stacks.Stack
 	var operatorStack stacks.Stack
 	// Iterate through infixTokens...
-	for i := 0; i < len(infixTokens); i++ {
-		token := infixTokens[i]
+	for _, token := range infixTokens {
 		// Add operand to output...
 		if isOperand(token) {
-			if token == "math.Pi" {
+			if token == "Pi" {
 				token = strconv.FormatFloat(math.Pi, 'E', -1, 64)
 			}
-			if token == "math.E" {
+			if token == "E" {
 				token = strconv.FormatFloat(math.E, 'E', -1, 64)
 			}
 			postfixStack.Push(token)
@@ -125,39 +124,56 @@ func UpdatePostfixTokens(infixTokens []string) []string {
 	return postfixTokens
 }
 
-const (
-	Higher = 1 + iota
-	Lower
-	SameLeftAssoc
-	SameRightAssoc
-)
-
-func getScore(op string) int {
-	op = strings.ToLower(op) + " "
-	switch {
-	case strings.Contains("^ ", op):
-		return 1
-	case strings.Contains("* / ", op):
-		return 2
-	case strings.Contains("+ - ", op):
-		return 3
-	case strings.Contains("( ) ", op):
-		return 4
+func UpdatePostfixValue(postfixTokens []string) float64 {
+	var operandStack stacks.Stack
+	for _, token := range postfixTokens {
+		if isOperand(token) {
+			operandStack.Push(token)
+			continue
+		}
+		var evalResult float64
+		if isOperator(token) {
+			rightOperand := getOperandValue(operandStack.Pop())
+			leftOperand := getOperandValue(operandStack.Pop())
+			switch token {
+			case "+":
+				evalResult = leftOperand + rightOperand
+			case "-":
+				evalResult = leftOperand - rightOperand
+			case "*":
+				evalResult = leftOperand * rightOperand
+			case "/":
+				evalResult = leftOperand / rightOperand
+			case "^":
+				evalResult = math.Pow(leftOperand, rightOperand)
+			}
+			operandStack.Push(strconv.FormatFloat(evalResult, 'E', -1, 64))
+			continue
+		}
+		if isFunction(token) {
+			operand := getOperandValue(operandStack.Pop())
+			switch token {
+			case "cos":
+				evalResult = math.Cos(getTrigOperand(operand))
+			case "sin":
+				evalResult = math.Sin(getTrigOperand(operand))
+			case "tan":
+				evalResult = math.Tan(getTrigOperand(operand))
+			case "exp":
+				evalResult = math.Exp(operand)
+			case "log":
+				evalResult = math.Log(operand)
+			case "log10":
+				evalResult = math.Log10(operand)
+			case "sqrt":
+				evalResult = math.Sqrt(operand)
+			}
+			operandStack.Push(strconv.FormatFloat(evalResult, 'E', -1, 64))
+			continue
+		}
 	}
-	return 0
-}
-
-func getOperatorPrecedence(op string, refOp string) int {
-	opScore := getScore(op)
-	refOpScore := getScore(refOp)
-	switch {
-	case opScore > refOpScore:
-		return Higher
-	case opScore < refOpScore:
-		return Lower
-	case opScore == 1:
-		return SameRightAssoc
-	default:
-		return SameLeftAssoc
+	if operandStack.Size() != 1 {
+		panic("Operand stack count != 1")
 	}
+	return getOperandValue(operandStack.Pop())
 }
