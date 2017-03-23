@@ -1,4 +1,4 @@
-package MathEval
+package matheval
 
 import (
 	"strings"

@@ -1,8 +1,7 @@
-package MathEval
+package matheval
 
 import (
 	"bytes"
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -118,8 +117,6 @@ func UpdatePostfixTokens(infixTokens []string) []string {
 		}
 		postfixStack.Push(operatorStack.Pop())
 	}
-	fmt.Print("Postfix Tokens: ")
-	fmt.Println(postfixStack)
 	postfixTokens := []string(postfixStack)
 	return postfixTokens
 }
