@@ -1,4 +1,4 @@
-package main
+package dirx
 
 import (
 	"flag"
@@ -6,15 +6,14 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
-	//"path/filepath"
-	//"github.com/carlca/types"
 )
 
 var indent int
 var err error
 
-func main() {
-	flag.String("path", "c:/go", "Starting path for recursive scan")
+// Dirx is an early attempt at a useful util
+func Dirx() {
+	flag.String("path", "/users/carlca/code/go", "Starting path for recursive scan")
 	flag.Int("indent", 2, "Indents per directory level")
 	flag.Parse()
 	path := flag.Args()[0]
@@ -25,25 +24,25 @@ func main() {
 	fmt.Println(path)
 	dirList := []string{}
 	level := 0
-	dirList = append(dirList, ScanDir(path, &level)...)
+	dirList = append(dirList, scanDir(path, &level)...)
 	for _, file := range dirList {
 		fmt.Println(file)
 	}
 }
 
-func ScanDir(path string, level *int) []string {
-	*level += 1
+func scanDir(path string, level *int) []string {
+	*level++
 	pad := strings.Repeat(" ", *level*indent)
 	result := []string{}
 	files, _ := ioutil.ReadDir(path)
 	for _, f := range files {
 		if f.IsDir() {
 			result = append(result, pad+f.Name()+" [dir]")
-			result = append(result, ScanDir(path+"/"+f.Name(), level)...)
+			result = append(result, scanDir(path+"/"+f.Name(), level)...)
 		} else {
 			result = append(result, pad+f.Name())
 		}
 	}
-	*level -= 1
+	*level--
 	return result
 }
