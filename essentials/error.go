@@ -2,15 +2,14 @@ package essentials
 
 import (
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/pkg/errors"
 )
 
 // CheckError is function to check error with call stack
-func CheckError(err error) {
+func CheckError(msg string, err error) {
 	if err != nil {
-		fmt.Printf("%+v", errors.WithStack(err))
-		os.Exit(1) // or anything else ...
+		log.Fatal(fmt.Sprintf("%v: %+v", msg, errors.WithStack(err)))
 	}
 }
