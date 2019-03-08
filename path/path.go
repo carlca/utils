@@ -18,6 +18,8 @@ func main() {
 	}
 }
 
+//
+
 func filterNeeded(path string) bool {
 	return strings.Contains(strings.ToLower(path), strings.ToLower(os.Args[1]))
 }
