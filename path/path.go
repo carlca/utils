@@ -16,6 +16,16 @@ func main() {
 			fmt.Println(path)
 		}            
 	}
+	a := 0
+	switch {
+	case a == 1:
+		Foo()
+	case a == 2:
+		Bar()
+	default:
+		FooBar()
+	}
+	
 }
 
 //
