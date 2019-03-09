@@ -16,19 +16,7 @@ func main() {
 			fmt.Println(path)
 		}            
 	}
-	a := 0
-	switch {
-	case a == 1:
-		Foo()
-	case a == 2:
-		Bar()
-	default:
-		FooBar()
-	}
-	
 }
-
-//
 
 func filterNeeded(path string) bool {
 	return strings.Contains(strings.ToLower(path), strings.ToLower(os.Args[1]))
